@@ -1,0 +1,22 @@
+{
+  "type": "commonjs",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "openai": "^6.21.0",
+    "pg": "^8.18.0",
+    "prettier": "^3.8.1",
+    "sequelize": "^6.37.7"
+  },
+  "scripts": {
+    "start": "sequelize db:migrate && nodemon server.js",
+    "migrate-undo": "sequelize db:migrate:undo",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.5"
+  }
+}
