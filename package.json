@@ -1,4 +1,9 @@
 {
+  "name": "ai-chat-widget",
+  "version": "1.0.0",
+  "description": "AI-powered chat bot for website embedding, built with Express, PostgreSQL and OpenAI API",
+  "repository": "https://github.com/lierzillah/ai-chat-example-nodejs",
+  "author": "Andrey Dubchak <a.dubchak.virtue@gmail.com>",
   "type": "commonjs",
   "dependencies": {
     "body-parser": "^2.2.2",
@@ -14,6 +19,7 @@
   },
   "scripts": {
     "start": "sequelize db:migrate && nodemon server.js",
+    "migrate": "sequelize-cli db:migrate --config config/config.js",
     "migrate-undo": "sequelize db:migrate:undo",
     "format": "prettier --write ."
   },

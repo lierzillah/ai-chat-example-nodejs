@@ -1,5 +1,4 @@
 $(document).ready(function () {
-  // localStorage.removeItem('chatId');
   const $chatContainer = $('.chat-container');
   const $chatMessages = $chatContainer.find('.chat-messages');
   const $chatInput = $('.chat-input input');
@@ -8,50 +7,45 @@ $(document).ready(function () {
 
   function renderMessage(text, type) {
     const cls = type === 'AI' ? 'ai' : 'user';
-    const message = $('<div>')
-      .addClass('chat-message ' + cls)
-      .text(text);
-
-    $chatMessages.append(message);
+    const $message = $('<div>').addClass('chat-message ' + cls).text(text);
+    $chatMessages.append($message);
     $chatMessages.scrollTop($chatMessages[0].scrollHeight);
   }
 
-  function loadMessages(chatId, callback) {
+  function setLoading(isLoading) {
+    $chatButton.prop('disabled', isLoading);
+    $chatInput.prop('disabled', isLoading);
+  }
+
+  function loadMessages(chatId) {
     $.get('/api/chat', { chatId }, function (res) {
       if (res.status === 'error') {
-        if (res.code === 401) {
-          localStorage.removeItem('chatId');
-          startChat();
-        }
+        localStorage.removeItem('chatId');
+        startChat();
         return;
       }
 
-      $chatMessages.find('.chat-message').not(':first').remove();
-
-      res.messages?.forEach((msg) => {
-        renderMessage(msg.text, msg.type);
-      });
-
-      if (callback) callback();
+      $chatMessages.find('.chat-message').remove();
+      res.messages?.forEach((msg) => renderMessage(msg.text, msg.type));
     });
   }
 
   function startChat() {
-    let chatId = localStorage.getItem('chatId');
+    const chatId = localStorage.getItem('chatId');
 
     if (chatId) {
       $chatIdInput.val(chatId);
       loadMessages(chatId);
-    } else {
-      $.post('/chat/start', function (res) {
-        if (res.chat && res.chat.chatId) {
-          chatId = res.chat.chatId;
-          localStorage.setItem('chatId', chatId);
-          $chatIdInput.val(chatId);
-          loadMessages(chatId);
-        }
-      });
+      return;
     }
+
+    $.post('/chat/start', function (res) {
+      if (res.chat?.chatId) {
+        localStorage.setItem('chatId', res.chat.chatId);
+        $chatIdInput.val(res.chat.chatId);
+        loadMessages(res.chat.chatId);
+      }
+    });
   }
 
   function sendMessage() {
@@ -62,20 +56,21 @@ $(document).ready(function () {
 
     renderMessage(text, 'USER');
     $chatInput.val('');
+    setLoading(true);
 
     $.ajax({
       url: '/chat/send',
       method: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({
-        chatId,
-        text,
-        type: 'USER',
-      }),
+      data: JSON.stringify({ chatId, text }),
       success: function (res) {
-        if (res.aiMessage) {
-          renderMessage(res.aiMessage, 'AI');
-        }
+        if (res.aiMessage) renderMessage(res.aiMessage, 'AI');
+      },
+      error: function () {
+        renderMessage('Помилка відправки. Спробуй ще раз.', 'AI');
+      },
+      complete: function () {
+        setLoading(false);
       },
     });
   }

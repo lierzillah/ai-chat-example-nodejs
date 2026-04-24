@@ -32,32 +32,6 @@ app.get('/chat_2', (req, res) => {
 
 chatRoutes(app);
 
-app.get('/dev/token-info', async (req, res) => {
-  try {
-    const usageResponse = await fetch(
-      'https://api.openai.com/v1/usage?start_date=2026-02-01&end_date=2026-02-13',
-      {
-        headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
-      },
-    );
-    const usageData = await usageResponse.json();
-
-    const billingResponse = await fetch(
-      'https://api.openai.com/v1/dashboard/billing/credit_grants',
-      {
-        headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
-      },
-    );
-    const billingData = await billingResponse.json();
-
-    res.json({ usage: usageData, billing: billingData });
-  } catch (e) {
-    res
-      .status(500)
-      .json({ error: 'Cannot fetch token info', details: e.message });
-  }
-});
-
 app.server = app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });

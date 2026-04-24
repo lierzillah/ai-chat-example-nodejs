@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./config').sequelize;
+const sequelize = require('./db').sequelize;
 
 const Chats = sequelize.define(
   'Chats',

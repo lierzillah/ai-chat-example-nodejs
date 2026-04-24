@@ -5,47 +5,35 @@ const chatRoutes = async (app) => {
   app.post('/chat/start', async (req, res) => {
     try {
       const chat = await Chats.create();
-
-      res.json({ chat });
+      return res.json({ chat });
     } catch (e) {
-      res.status(500).json({ error: 'Failed to start chat' });
+      return res.status(500).json({ error: 'Failed to start chat' });
     }
   });
 
   app.get('/api/chat', async (req, res) => {
     try {
       const { chatId } = req.query;
-      const isChatExist = await Chats.findOne({
-        where: { chatId },
-      });
+      const isChatExist = await Chats.findOne({ where: { chatId } });
 
-      if (!isChatExist) res.json({ status: 'error', error: 'Chat not found', code: 401 });
+      if (!isChatExist) {
+        return res.status(404).json({ status: 'error', error: 'Chat not found' });
+      }
 
       const { chat, messages } = await getChat({ chatId });
-
-      res.json({ status: 'success', chat, messages });
+      return res.json({ status: 'success', chat, messages });
     } catch (e) {
-      res.status(500).json({ error: 'Failed to load chat', code: 403 });
+      return res.status(500).json({ error: 'Failed to load chat' });
     }
   });
 
   app.post('/chat/send', async (req, res) => {
     try {
       const { chatId, text } = req.body;
-
-      const { userMessage, aiMessage } = await sendChatMessage({
-        chatId,
-        text,
-      });
-
-      res.json({
-        chatId,
-        userMessage,
-        aiMessage,
-      });
+      const { userMessage, aiMessage } = await sendChatMessage({ chatId, text });
+      return res.json({ chatId, userMessage, aiMessage });
     } catch (e) {
-      console.log('e', e);
-      res.status(500).json({ error: 'Failed to send message' });
+      return res.status(500).json({ error: 'Failed to send message' });
     }
   });
 };

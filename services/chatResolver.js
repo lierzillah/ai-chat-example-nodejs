@@ -1,5 +1,5 @@
 const { Messages, Chats } = require('../models');
-const PROMPTS = require('../promts');
+const PROMPTS = require('../prompts');
 const OpenAI = require('openai');
 
 const { OPENAI_API_KEY, MAX_MESSAGES_PER_CHAT, MIN_INTERVAL_MS } = process.env;
