@@ -55,6 +55,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const { chatRoutes } = require('./services/chatRoutes');
 
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 app.get('/chat_1', (req, res) => res.render('chat_1'));
 app.get('/chat_2', (req, res) => res.render('chat_2'));
 
