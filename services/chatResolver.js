@@ -1,6 +1,7 @@
 const { Messages, Chats } = require('../models');
 const PROMPTS = require('../prompts');
 const OpenAI = require('openai');
+const logger = require('../logger/logger');
 
 const { OPENAI_API_KEY, MAX_MESSAGES_PER_CHAT, MIN_INTERVAL_MS } = process.env;
 
@@ -47,7 +48,11 @@ const getChat = async ({ chatId }) => {
     });
     return { chat, messages };
   } catch (ex) {
-    console.log('ex', ex);
+    logger.error('get_chat_failed', {
+      chatId,
+      error: e.message,
+      stack: e.stack,
+    });
   }
 };
 
@@ -90,11 +95,11 @@ const sendChatMessage = async ({ chatId, text }) => {
 
     const history = await Messages.findAll({
       where: { chatId },
-      order: [['createdAt', 'DESC']],
+      order: [['createdAt', 'ASC']],
       limit: 5,
     });
 
-    const messages = history.reverse().map((m) => ({
+    const messages = history.map((m) => ({
       role: m.type === 'AI' ? 'assistant' : 'user',
       content: m.text,
     }));
@@ -122,7 +127,11 @@ const sendChatMessage = async ({ chatId, text }) => {
       aiMessage: aiText,
     };
   } catch (e) {
-    console.log('e', e);
+    logger.error('send_chat_message_failed', {
+      chatId,
+      error: e.message,
+      stack: e.stack,
+    });
     return {
       chatId,
       userMessage: text,

@@ -155,55 +155,7 @@
 
 <link href="css/header.css%2Cqv%3D3.pagespeed.ce.dK7zaAEJta.css" rel="stylesheet">
 <link href="css/footer.css%2Cqv%3D3.pagespeed.ce.FjP9vszWf0.css" rel="stylesheet">
-<!-- Favicons -->    <!-- Analytics -->
 
-<!-- Google tag (gtag.js) -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-DM4889FJH8"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-DM4889FJH8');
-</script>
-
-<!-- Meta Pixel Code -->
-<script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '7600605996645383');
-    fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=7600605996645383&ev=PageView&noscript=1"/></noscript>
-<!-- End Meta Pixel Code -->
-
-<!-- Hotjar Tracking Code for https://polza.com -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:6463143,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script><script async="" src="js/hotjar-6463143.js"></script>
-<!-- End Hotjar Tracking Code -->
-
-<script>
-    // Load core.js with cache busting (version timestamp)
-    (function() {
-        var s = document.createElement('script');
-        s.src = 'https://api.polza.com/v1/analytics/core.js?v=1.1.' + Date.now();
-        document.head.appendChild(s);
-    })();
-</script><script src="js/core.js"></script>
 
 <!-- Analytics -->
 </head>
@@ -1381,7 +1333,6 @@
     })
     .then(data => {
       document.getElementById('footer-contact').innerHTML = data;
-      //console.log("good!");
     })
     .catch(error => {
       console.error('There was a problem with the fetch operation:', error);

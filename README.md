@@ -2,6 +2,10 @@
 
 An AI-powered chat bot built with Node.js, Express, PostgreSQL and OpenAI API. Renders via EJS templates and can be embedded on any website.
 
+## Preview
+
+![Chat Widget](./public/preview.png)
+
 ## Features
 
 - Chat with context-aware prompts based on message content
@@ -28,7 +32,7 @@ An AI-powered chat bot built with Node.js, Express, PostgreSQL and OpenAI API. R
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/lierzillah/ai-chat-example-nodejs
 cd your-repo
 npm install
 ```
@@ -50,6 +54,12 @@ Fill in your values in `.env`:
 `OPENAI_API_KEY` — your OpenAI API key
 `MAX_MESSAGES_PER_CHAT` — max user messages per session
 `MIN_INTERVAL_MS` — min delay between messages (ms)
+
+```bash
+cp prompts.example.js prompts.js
+```
+
+Fill in your prompts in `prompts.js`
 
 ### Run
 

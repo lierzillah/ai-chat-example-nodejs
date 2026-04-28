@@ -7,7 +7,9 @@ $(document).ready(function () {
 
   function renderMessage(text, type) {
     const cls = type === 'AI' ? 'ai' : 'user';
-    const $message = $('<div>').addClass('chat-message ' + cls).text(text);
+    const $message = $('<div>')
+      .addClass('chat-message ' + cls)
+      .text(text);
     $chatMessages.append($message);
     $chatMessages.scrollTop($chatMessages[0].scrollHeight);
   }
@@ -25,14 +27,13 @@ $(document).ready(function () {
         return;
       }
 
-      $chatMessages.find('.chat-message').remove();
+      $chatMessages.find('.chat-message').not(':first').remove();
       res.messages?.forEach((msg) => renderMessage(msg.text, msg.type));
     });
   }
 
   function startChat() {
     const chatId = localStorage.getItem('chatId');
-
     if (chatId) {
       $chatIdInput.val(chatId);
       loadMessages(chatId);
