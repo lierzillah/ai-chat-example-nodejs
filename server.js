@@ -46,7 +46,6 @@ const apiLimiter = rateLimit({
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', './views');

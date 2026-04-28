@@ -40,10 +40,15 @@ const getChat = async ({ chatId }) => {
       return { chat, messages: JSON.parse(cached) };
     }
 
-    const messages = await Messages.findAll({
+    const rows = await Messages.findAll({
       where: { chatId },
       order: [['created_at', 'ASC']],
     });
+
+    const messages = rows.map((m) => ({
+      role: m.type === 'AI' ? 'assistant' : 'user',
+      content: m.text,
+    }));
 
     await redis.set(`history:${chatId}`, JSON.stringify(messages), 'EX', 3600);
 
@@ -72,14 +77,14 @@ const sendChatMessage = async ({ chatId, text }) => {
     await redis.set(rateLimitKey, '1', 'PX', Number(MIN_INTERVAL_MS));
 
     const countKey = `msg_count:${chatId}`;
-    const count = await redis.incr(countKey);
-    if (count === 1) {
-      const realCount = await Messages.count({ where: { chatId, type: 'USER' } });
-      if (realCount > 0) {
-        await redis.set(countKey, realCount);
-      }
+    let currentCount = await redis.get(countKey);
+
+    if (currentCount === null) {
+      currentCount = await Messages.count({ where: { chatId, type: 'USER' } });
+      await redis.set(countKey, currentCount);
     }
-    if (count > Number(MAX_MESSAGES_PER_CHAT)) {
+
+    if (Number(currentCount) >= Number(MAX_MESSAGES_PER_CHAT)) {
       return {
         chatId,
         userMessage: text,
@@ -88,6 +93,7 @@ const sendChatMessage = async ({ chatId, text }) => {
     }
 
     await Messages.create({ chatId, text, type: 'USER' });
+    await redis.incr(countKey);
 
     const historyKey = `history:${chatId}`;
     let messages;
@@ -104,6 +110,7 @@ const sendChatMessage = async ({ chatId, text }) => {
         role: m.type === 'AI' ? 'assistant' : 'user',
         content: m.text,
       }));
+      await redis.set(historyKey, JSON.stringify(messages), 'EX', 3600);
     }
 
     const completion = await openai.chat.completions.create({
@@ -118,7 +125,6 @@ const sendChatMessage = async ({ chatId, text }) => {
     const aiText = completion.choices[0].message.content;
 
     await Messages.create({ chatId, text: aiText, type: 'AI' });
-
     await redis.del(historyKey);
 
     return { chatId, userMessage: text, aiMessage: aiText };
