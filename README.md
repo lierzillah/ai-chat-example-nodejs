@@ -4,8 +4,8 @@ An AI-powered chat bot built with Node.js, Express, PostgreSQL and OpenAI API. R
 
 ## Preview
 
-![Chat Widget](./public/preview1.png)
-![Chat Widget](./public/preview2.png)
+![Chat Widget](./public/images/preview1.png)
+![Chat Widget](./public/images/preview2.png)
 
 ## Features
 
